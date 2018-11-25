@@ -1,0 +1,579 @@
+UseCaseModel Ticket12306 {
+
+	Actor User {
+
+		UC::orderTicket() -> Ticket12306 include userIdentification
+		UC::cancelOrder() -> Ticket12306 include userIdentification
+		UC::queryOrder() -> Ticket12306 include userIdentification
+		UC::searchTicket() -> Ticket12306
+	}
+	
+
+	Actor Administrator {
+
+		UC::manageStation()
+		UC::manageTicket()
+		UC::manageUser()
+
+	}
+	
+	UC::userIdentification()
+	
+
+}
+
+Service Ticket12306 {
+
+	[Operation]
+	orderTickets(ticketid, quantity)
+	searchTickets(fromid, toid)
+	queryOrder(userid)
+	cancelOrder(orderid)
+	userAuthentication(userid, password)
+
+	[TempProperty]
+	UserValidated : Boolean
+	CurrentUser : User
+	OrderIDAutoIncrement : Integer
+}
+
+
+Service ManageStationCRUDService {
+
+	[Operation]
+	createStation(Id, name, isopened)
+	queryStation(Id)
+	modifyStation(Id, name, isopened)
+	deleteStation(Id)
+}
+
+Service ManageTicketCRUDService {
+
+	[Operation]
+	createTicket(Id, IdFrom, IdTo, amount, price)
+	queryTicket(Id)
+	modifyTicket(Id, IdFrom, IdTo, amount, price)
+	deleteTicket(Id)
+}
+
+
+Service ManageUserCRUDService {
+
+	[Operation]
+	createUser(Id, name, password)
+	queryUser(Id)
+	modifyUser(Id, name, password)
+	deleteUser(Id)
+
+}
+
+
+Interaction SearchInteraction {
+	[Participants: User Ticket12306]
+	
+	CallMessage::SearchInteractioncallMessage1(searchTickets SearchInteractioncallMessage1SendingEnd -> SearchInteractionexecution1StartEnd)
+	ReturnMessage::SearchInteractioncallMessage1Return(SearchInteractionexecution1FinishEnd -> SearchInteractioncallMessage1ReturnReceivingEnd SearchInteractioncallMessage1)
+
+	Execution::SearchInteractionexecution1(Ticket12306 SearchInteractionexecution1StartEnd SearchInteractionexecution1FinishEnd)
+
+	MessageEnd::SearchInteractioncallMessage1SendingEnd(User SearchInteractioncallMessage1)
+	ExecutionEnd::SearchInteractionexecution1StartEnd(Ticket12306 SearchInteractionexecution1)
+	ExecutionEnd::SearchInteractionexecution1FinishEnd(Ticket12306 SearchInteractionexecution1)
+	MessageEnd::SearchInteractioncallMessage1ReturnReceivingEnd(User SearchInteractioncallMessage1Return)
+	
+}
+
+Interaction OrderInteraction {
+
+	[Participants: User Ticket12306]
+
+	CallMessage::OrderInteractioncallMessage1(userAuthentication OrderInteractioncallMessage1SendingEnd -> OrderInteractionexecution1StartEnd)
+	ReturnMessage::OrderInteractioncallMessage1Return(OrderInteractionexecution1FinishEnd -> OrderInteractioncallMessage1ReturnReceivingEnd OrderInteractioncallMessage1)
+	CallMessage::OrderInteractioncallMessage3(searchTickets OrderInteractioncallMessage3SendingEnd -> OrderInteractionexecution2StartEnd)
+	ReturnMessage::OrderInteractioncallMessage3Return(OrderInteractionexecution2FinishEnd -> OrderInteractioncallMessage3ReturnReceivingEnd OrderInteractioncallMessage3)
+	CallMessage::OrderInteractionCallMessage5(orderTickets OrderInteractionCallMessage5SendingEnd -> OrderInteractionExecution3StartEnd)
+	ReturnMessage::OrderInteractionCallMessage5Return(OrderInteractionExecution3FinishEnd -> OrderInteractionCallMessage5ReturnReceivingEnd OrderInteractionCallMessage5)
+
+	Execution::OrderInteractionexecution1(Ticket12306 OrderInteractionexecution1StartEnd OrderInteractionexecution1FinishEnd)
+	Execution::OrderInteractionexecution2(Ticket12306 OrderInteractionexecution2StartEnd OrderInteractionexecution2FinishEnd)
+	Execution::OrderInteractionExecution3(Ticket12306 OrderInteractionExecution3StartEnd OrderInteractionExecution3FinishEnd)
+
+	MessageEnd::OrderInteractioncallMessage1SendingEnd(User OrderInteractioncallMessage1)
+	ExecutionEnd::OrderInteractionexecution1StartEnd(Ticket12306 OrderInteractionexecution1)
+	ExecutionEnd::OrderInteractionexecution1FinishEnd(Ticket12306 OrderInteractionexecution1)
+	MessageEnd::OrderInteractioncallMessage1ReturnReceivingEnd(User OrderInteractioncallMessage1Return)
+	MessageEnd::OrderInteractioncallMessage3SendingEnd(User OrderInteractioncallMessage3)
+	ExecutionEnd::OrderInteractionexecution2StartEnd(Ticket12306 OrderInteractionexecution2)
+	ExecutionEnd::OrderInteractionexecution2FinishEnd(Ticket12306 OrderInteractionexecution2)
+	MessageEnd::OrderInteractioncallMessage3ReturnReceivingEnd(User OrderInteractioncallMessage3Return)
+	MessageEnd::OrderInteractionCallMessage5SendingEnd(User OrderInteractionCallMessage5)
+	ExecutionEnd::OrderInteractionExecution3StartEnd(Ticket12306 OrderInteractionExecution3)
+	ExecutionEnd::OrderInteractionExecution3FinishEnd(Ticket12306 OrderInteractionExecution3)
+	MessageEnd::OrderInteractionCallMessage5ReturnReceivingEnd(User OrderInteractionCallMessage5Return)
+
+}
+
+Interaction CancelInteraction {
+
+	[Participants: User Ticket12306]
+
+	CallMessage::CancelInteractionCallMessage1(userAuthentication CancelInteractionCallMessage1SendingEnd -> CancelInteractionExecution1StartEnd)
+	ReturnMessage::CancelInteractionCallMessage1Return(CancelInteractionExecution1FinishEnd -> CancelInteractionCallMessage1ReturnReceivingEnd CancelInteractionCallMessage1)
+	CallMessage::CancelInteractionCallMessage3(queryOrder CancelInteractionCallMessage3SendingEnd -> CancelInteractionExecution2StartEnd)
+	ReturnMessage::CancelInteractionCallMessage3Return(CancelInteractionExecution2FinishEnd -> CancelInteractionCallMessage3ReturnReceivingEnd CancelInteractionCallMessage3)
+	CallMessage::CancelInteractionCallMessage5(cancelOrder CancelInteractionCallMessage5SendingEnd -> CancelInteractionExecution3StartEnd)
+	ReturnMessage::CancelInteractionCallMessage5Return(CancelInteractionExecution3FinishEnd -> CancelInteractionCallMessage5ReturnReceivingEnd CancelInteractionCallMessage5)
+
+	Execution::CancelInteractionExecution1(Ticket12306 CancelInteractionExecution1StartEnd CancelInteractionExecution1FinishEnd)
+	Execution::CancelInteractionExecution2(Ticket12306 CancelInteractionExecution2StartEnd CancelInteractionExecution2FinishEnd)
+	Execution::CancelInteractionExecution3(Ticket12306 CancelInteractionExecution3StartEnd CancelInteractionExecution3FinishEnd)
+
+	MessageEnd::CancelInteractionCallMessage1SendingEnd(User CancelInteractionCallMessage1)
+	ExecutionEnd::CancelInteractionExecution1StartEnd(Ticket12306 CancelInteractionExecution1)
+	ExecutionEnd::CancelInteractionExecution1FinishEnd(Ticket12306 CancelInteractionExecution1)
+	MessageEnd::CancelInteractionCallMessage1ReturnReceivingEnd(User CancelInteractionCallMessage1Return)
+	MessageEnd::CancelInteractionCallMessage3SendingEnd(User CancelInteractionCallMessage3)
+	ExecutionEnd::CancelInteractionExecution2StartEnd(Ticket12306 CancelInteractionExecution2)
+	ExecutionEnd::CancelInteractionExecution2FinishEnd(Ticket12306 CancelInteractionExecution2)
+	MessageEnd::CancelInteractionCallMessage3ReturnReceivingEnd(User CancelInteractionCallMessage3Return)
+	MessageEnd::CancelInteractionCallMessage5SendingEnd(User CancelInteractionCallMessage5)
+	ExecutionEnd::CancelInteractionExecution3StartEnd(Ticket12306 CancelInteractionExecution3)
+	ExecutionEnd::CancelInteractionExecution3FinishEnd(Ticket12306 CancelInteractionExecution3)
+	MessageEnd::CancelInteractionCallMessage5ReturnReceivingEnd(User CancelInteractionCallMessage5Return)
+
+}
+
+@AutoCRUD
+Entity Station {
+
+	StationID : Integer
+	Name : String
+	IsOpened : Boolean
+
+	[Refer]
+	BelongToTickets : Ticket*
+
+	[INV]
+	inv UniqueStationID : Station.allInstance()->isUnique(s:Station | s.StationID)
+}
+
+@AutoCRUD
+Entity Ticket{
+	TicketID : String
+	FromID : Integer
+	ToID : Integer
+	Price : Real
+	Amount : Integer
+	
+	[Refer]
+	PassThroughStations : Station*
+	
+	
+	[INV]
+	inv UniqueTicketID : Ticket.allInstance()->isUnique(t:Ticket | t.TicketID)
+	inv amountGreatAndEqualZero : Amount >= 0
+	inv priceGreatAndEqualZero : Price > 0
+}
+
+Entity Order {
+
+	OrderID:Integer
+	UserID : Integer
+	TicketID : String
+	Amount : Integer
+	Price : Real
+	IsValid : Boolean
+
+	[Refer]
+	InvolveTicket : Ticket
+	CreatedByUser : User
+
+	[INV]
+	inv AmountGreatAndEqualZero : Amount >= 0
+	inv UniqueOrderID : Order.allInstance()->isUnique(o:Order | o.OrderID)
+
+}
+
+@AutoCRUD
+Entity User{
+	UserID:Integer
+	Name:String
+	Password:String
+	
+	[Refer]
+	HasOrder:Order*
+	
+	[INV]
+	inv UniqueUserID : User.allInstance()->isUnique(u:User | u.UserID)
+}
+
+
+//Contract Ticket12306::orderTickets Skeleton
+Contract Ticket12306::orderTickets(ticketid:String,  quantity :Integer) : Boolean {
+	
+	/* definition skeleton */
+	definition:
+		ticket:Ticket = Ticket.allInstance()->any(tick:Ticket | tick.TicketID = ticketid)
+		
+	/* precondition: skeleton */
+	precondition:
+		self.UserValidated = true and
+		ticket.oclIsUndefined() = false and
+		ticket.Amount >= quantity
+	
+	/* postcondition: skeleton */
+	postcondition:
+		let ord:Order in
+		ord.oclIsNew() and
+		ord.OrderID = self.OrderIDAutoIncrement and
+		ord.TicketID = ticketid and
+		ord.Amount = quantity and
+		ord.IsValid = true and
+		ord.UserID = self.CurrentUser.UserID and
+		Order.allInstance()->includes(ord) and
+		ticket.Amount = ticket.Amount@pre - quantity and
+		self.OrderIDAutoIncrement = self.OrderIDAutoIncrement@pre + 1 and
+		ord.Price = quantity * ticket.Price and
+		result = true
+}
+   
+//Contract Ticket12306::searchTickets Skeleton
+Contract Ticket12306::searchTickets(fromid : Integer,  toid : Integer) : Set(Ticket) {
+	
+	definition:
+		tickets:Set(Ticket) = Ticket.allInstance()->select(tic:Ticket | tic.FromID = fromid and tic.ToID = toid)
+		
+	/* precondition: skeleton */
+	precondition:
+		true
+	
+	/* postcondition: skeleton */
+	postcondition:
+		result = tickets
+}
+//Contract Ticket12306::queryOrder Skeleton
+Contract Ticket12306::queryOrder(userid:Integer) : Set(Order) {
+	
+	/* definition skeleton */
+	definition:
+		order:Set(Order) = Order.allInstance()->select(ord:Order | ord.UserID = userid)
+		
+	/* precondition: skeleton */
+	precondition:
+		self.UserValidated = true
+	
+	/* postcondition: skeleton */
+	postcondition:
+		
+		result = order
+}
+   
+
+   
+//Contract Ticket12306::cancelOrder Skeleton
+Contract Ticket12306::cancelOrder(orderid :Integer) : Boolean {
+	
+	/* definition skeleton */
+	definition:
+		order:Order = Order.allInstance()->any(ord:Order | ord.OrderID = orderid),
+		ticket:Ticket = Ticket.allInstance()->any(tic:Ticket | tic.TicketID = order.TicketID)
+		
+	/* precondition: skeleton */
+	precondition:
+		self.UserValidated = true and
+		order.oclIsUndefined() = false and
+		order.UserID = self.CurrentUser.UserID
+	
+	/* postcondition: skeleton */
+	postcondition:
+		ticket.Amount = ticket.Amount@pre + order.Amount and
+		order.IsValid = false and
+		result = true
+		
+}
+
+//Contract Ticket12306::userAuthentication Skeleton
+Contract Ticket12306::userAuthentication(userid:Integer, password:String) : Boolean {
+	
+	/* definition skeleton */
+	definition:
+		user:User = User.allInstance()->any(use:User | use.UserID = userid)
+	/* precondition: skeleton */
+	precondition:
+		true
+	
+	/* postcondition: skeleton */
+	postcondition:
+		if
+			(user.oclIsUndefined() = false and user.Password = password)
+		then
+			self.UserValidated = true and
+			self.CurrentUser = user and
+			result = true
+		else
+			self.UserValidated = false and
+			result = false
+		endif
+}
+   
+
+   
+
+
+//entity create operation 
+Contract  ManageTicketCRUDService::createTicket(ticketid : String, fromid : Integer, toid : Integer, price : Real, amount : Integer) : Boolean {
+	
+	/* definition: find specific Ticket instance by ticketid */
+	definition:
+		ticket:Ticket = Ticket.allInstance()->any(tick:Ticket | tick.TicketID = ticketid),
+		stationFrom:Station = Station.allInstance()->any(stat:Station | stat.StationID = fromid),
+		stationTo:Station = Station.allInstance()->any(stat:Station | stat.StationID = toid)
+	
+	/* precondition: the instance Ticket was not found in the system */
+	precondition:
+		ticket.oclIsUndefined() = true and
+		stationFrom.oclIsUndefined() = false and
+		stationFrom.IsOpened = true and
+		stationTo.oclIsUndefined() = false and
+		stationTo.IsOpened = true
+	
+	/* postcondition: 
+	 * A Ticket instance use was created.
+	 * all properties of use became the same values as inputs.
+	 */
+	postcondition:
+		let tick:Ticket in
+		tick.oclIsNew() and
+		tick.TicketID = ticketid and
+		tick.FromID = fromid and
+		tick.ToID = toid and
+		tick.Price = price and
+		tick.Amount = amount and
+		Ticket.allInstance()->includes(tick) and
+		result = true
+}
+
+//entity query operation 
+Contract  ManageTicketCRUDService::queryTicket(ticketid : String) : Ticket {
+	
+	/* definition: find specific Ticket instance by ticketid */
+	definition:
+		ticket:Ticket = Ticket.allInstance()->any(tick:Ticket | tick.TicketID = ticketid)
+	
+	/* precondition: the instance Ticket was found in the system */	
+	precondition:
+		ticket.oclIsUndefined() = false
+		
+	/* postcondition: return found the instance Ticket */
+	postcondition:
+		result = ticket
+}
+						
+
+//entity modify operation 
+Contract  ManageTicketCRUDService::modifyTicket(ticketid : String, fromid : Integer, toid : Integer, price : Real, amount : Integer) : Boolean {
+	
+	/* definition: find specific Ticket instance by ticketid */
+	definition:
+		ticket:Ticket = Ticket.allInstance()->any(tick:Ticket | tick.TicketID = ticketid),
+		stationFrom:Station = Station.allInstance()->any(stat:Station | stat.StationID = fromid),
+		stationTo:Station = Station.allInstance()->any(stat:Station | stat.StationID = toid)
+	
+	/* precondition: the instance Ticket was found in the system */
+	precondition:
+		ticket.oclIsUndefined() = false and
+		stationFrom.oclIsUndefined() = false and
+		stationFrom.IsOpened = true and
+		stationTo.oclIsUndefined() = false and
+		stationTo.IsOpened = true
+	
+	/* postcondition: all properties of use became the same values as inputs. */							
+	postcondition:
+		ticket.TicketID = ticketid and
+		ticket.FromID = fromid and
+		ticket.ToID = toid and
+		ticket.Price = price and
+		ticket.Amount = amount and
+		result = true
+}
+
+//entity delete operation 
+Contract  ManageTicketCRUDService::deleteTicket(ticketid : String) : Boolean {
+	
+	/* definition: find specific Ticket instance by Ticketid */
+	definition:
+		ticket:Ticket = Ticket.allInstance()->any(tick:Ticket | tick.TicketID = ticketid)
+	
+	/* precondition: the instance Ticket was found in the system */
+	precondition:
+		ticket.oclIsUndefined() = false and
+		Ticket.allInstance()->includes(ticket)
+	
+	/* postcondition: the instance Ticket was deleted from the system */
+	postcondition:
+		Ticket.allInstance()->excludes(ticket) and
+		result = true
+}
+
+
+
+//entity create operation 
+Contract  ManageStationCRUDService::createStation(stationid : Integer, name : String, isopened : Boolean) : Boolean {
+	
+	/* definition: find specific Station instance by stationid */
+	definition:
+		station:Station = Station.allInstance()->any(stat:Station | stat.StationID = stationid)
+	
+	/* precondition: the instance Station was not found in the system */
+	precondition:
+		station.oclIsUndefined() = true
+	
+	/* postcondition: 
+	 * A Station instance use was created.
+	 * all properties of use became the same values as inputs.
+	 */
+	postcondition:
+		let stat:Station in
+		stat.oclIsNew() and
+		stat.StationID = stationid and
+		stat.Name = name and
+		stat.IsOpened = isopened and
+		Station.allInstance()->includes(stat) and
+		result = true
+}
+
+//entity query operation 
+Contract  ManageStationCRUDService::queryStation(stationid : Integer) : Station {
+	
+	/* definition: find specific Station instance by Stationid */
+	definition:
+		station:Station = Station.allInstance()->any(stat:Station | stat.StationID = stationid)
+	
+	/* precondition: the instance Station was found in the system */	
+	precondition:
+		station.oclIsUndefined() = false
+		
+	/* postcondition: return found the instance Station */
+	postcondition:
+		result = station
+}
+						
+
+//entity modify operation 
+Contract  ManageStationCRUDService::modifyStation(stationid : Integer, name : String, isopened : Boolean) : Boolean {
+	
+	/* definition: find specific Station instance by stationid */
+	definition:
+		station:Station = Station.allInstance()->any(stat:Station | stat.StationID = stationid)
+	
+	/* precondition: the instance Station was found in the system */
+	precondition:
+		station.oclIsUndefined() = false
+	
+	/* postcondition: all properties of use became the same values as inputs. */							
+	postcondition:
+		station.StationID = stationid and
+		station.Name = name and
+		station.IsOpened = isopened and
+		result = true
+}
+
+//entity delete operation 
+Contract  ManageStationCRUDService::deleteStation(stationid : Integer) : Boolean {
+	
+	/* definition: find specific Station instance by stationid */
+	definition:
+		station:Station = Station.allInstance()->any(stat:Station | stat.StationID = stationid),
+		ticket:Ticket = Ticket.allInstance()->any(tick:Ticket | tick.FromID = stationid or tick.ToID = stationid)
+	
+	/* precondition: the instance Station was found in the system */
+	precondition:
+		ticket.oclIsUndefined() = true and
+		station.oclIsUndefined() = false and
+		Station.allInstance()->includes(station)
+	
+	/* postcondition: the instance Station was deleted from the system */
+	postcondition:
+		Station.allInstance()->excludes(station) and
+		result = true
+}
+
+//entity create operation 
+Contract  ManageUserCRUDService::createUser(userid : Integer, name : String, password : String) : Boolean {
+	
+	/* definition: find specific User instance by userid */
+	definition:
+		user:User = User.allInstance()->any(use:User | use.UserID = userid)
+	
+	/* precondition: the instance user was not found in the system */
+	precondition:
+		user.oclIsUndefined() = true
+	
+	/* postcondition: 
+	 * A User instance use was created.
+	 * all properties of use became the same values as inputs.
+	 */
+	postcondition:
+		let use:User in
+		use.oclIsNew() and
+		use.UserID = userid and
+		use.Name = name and
+		use.Password = password and
+		User.allInstance()->includes(use) and
+		result = true
+}
+
+//entity query operation 
+Contract  ManageUserCRUDService::queryUser(userid : Integer) : User {
+	
+	/* definition: find specific User instance by userid */
+	definition:
+		user:User = User.allInstance()->any(use:User | use.UserID = userid)
+	
+	/* precondition: the instance user was found in the system */	
+	precondition:
+		user.oclIsUndefined() = false
+		
+	/* postcondition: return found the instance user */
+	postcondition:
+		result = user
+}
+						
+
+//entity modify operation 
+Contract  ManageUserCRUDService::modifyUser(userid : Integer, name : String, password:String) : Boolean {
+	
+	/* definition: find specific User instance by userid */
+	definition:
+		user:User = User.allInstance()->any(use:User | use.UserID = userid)
+	
+	/* precondition: the instance user was found in the system */
+	precondition:
+		user.oclIsUndefined() = false
+	
+	/* postcondition: all properties of use became the same values as inputs. */							
+	postcondition:
+		user.UserID = userid and
+		user.Name = name and
+		user.Password = password and
+		result = true
+}
+
+//entity delete operation 
+Contract  ManageUserCRUDService::deleteUser(userid : Integer) : Boolean {
+	
+	/* definition: find specific User instance by userid */
+	definition:
+		user:User = User.allInstance()->any(use:User | use.UserID = userid)
+	
+	/* precondition: the instance user was found in the system */
+	precondition:
+		user.oclIsUndefined() = false and
+		User.allInstance()->includes(user)
+	
+	/* postcondition: the instance user was deleted from the system */
+	postcondition:
+		User.allInstance()->excludes(user) and
+		result = true
+}
+
